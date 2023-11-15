@@ -45,5 +45,6 @@ Implementation of the successor function
 
 # PHASE THREE
 the Heuristic function should be implemented first, and then the following algorithms should be implemented:
+
 5. A^*
 6. Best First Search
