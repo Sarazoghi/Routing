@@ -48,7 +48,7 @@ city_map = [
 ]
 
 # Example initial state
-initial_state = (0, 0, 0)  # Replace with the actual initial state
+initial_state = (0, 0, 500)  # Replace with the actual initial state
 
 # Generate successor states from the initial state
 successors = successor(initial_state, city_map)
