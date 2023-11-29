@@ -1,3 +1,5 @@
+import time
+
 def successor(state, city_map):
     x, y, energy = state
     successors = []
@@ -20,7 +22,7 @@ def successor(state, city_map):
             energy_cost = int(first_letter)
 
             if second_letter == 'T':
-                energy_cost = 0  # No additional energy cost for targets
+                energy_cost   # No additional energy cost for targets
             elif second_letter == 'C':
                 energy_cost = 10 - energy_cost  # Replenish energy at the cafe
             elif second_letter == 'B':
@@ -34,8 +36,46 @@ def successor(state, city_map):
                 new_energy = energy - energy_cost
                 # Append the successor state to the list
                 successors.append((new_x, new_y, new_energy))
-            else :
-                print("YOU ARE A LOSER :)")
+
+    return successors
+
+def find_optimal_route(initial_state, city_map):
+    start_time = time.time()
+    
+    # Initialize variables
+    final_energy = 500
+    current_state = initial_state
+    movements_used = []
+    
+    # Flatten the city_map to check for targets in the entire map
+    targets_exist = 'T' in [cell[1] for row in city_map for cell in row]
+
+    # Perform movements until reaching all targets
+    while targets_exist:
+        successors = successor(current_state, city_map)
+
+        # If no successors are available, there is no route
+        if not successors:
+            print("There is no route.")
+            return
+
+        # Choose the successor with the maximum energy gain
+        best_successor = max(successors, key=lambda x: x[2])
+
+        # Update variables
+        current_state = (best_successor[0], best_successor[1], best_successor[2])
+        final_energy = best_successor[2]
+        movements_used.append(best_successor[3])
+
+        # Check for targets in the entire city_map
+        targets_exist = 'T' in [cell[1] for row in city_map for cell in row]
+
+    end_time = time.time()
+
+    # Print the results
+    print(f"{final_energy}")
+    print(f"{''.join(movements_used)}")
+    print(f"{end_time - start_time:.4f}")
 
 # Example usage:
 city_map = [
@@ -50,10 +90,5 @@ city_map = [
 # Example initial state
 initial_state = (0, 0, 500)  # Replace with the actual initial state
 
-# Generate successor states from the initial state
-successors = successor(initial_state, city_map)
-
-# Print the generated successor states with energy cost
-for s in successors:
-    x, y, energy = s
-    print(f"New Position: ({x}, {y}), New Energy: {energy}")
+# Find the optimal route
+find_optimal_route(initial_state, city_map)
