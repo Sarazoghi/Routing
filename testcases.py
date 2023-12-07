@@ -3,7 +3,7 @@
 # for row in range(rows):
 #     city_map.append(input().split())
 rows, cols = 6, 10
-city_map = [
+initial_map = [
     ['1R', '1', '1', '5', '5', '4', '2C', '1', '15', '1B'],
     ['1', '1', '5', '3', '5', '5', '4', '5', 'X', 'X'],
     ['5', '1I', '1', '6', '2', '2', '2', '1', '1', '1T'],
@@ -11,6 +11,7 @@ city_map = [
     ['X', 'X', '1', 'X', 'X', '50', '2', '1C', '1', 'X'],
     ['1', '1', '1', '2', '2', '2T', '2', '1', '1', '1'],
 ]
+city_map = initial_map.copy()
 target_coord = []
 START_ENERGY = 500
 bonus_values = {
