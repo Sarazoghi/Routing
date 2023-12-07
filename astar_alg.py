@@ -1,6 +1,14 @@
-from testcases import target_coord
+from testcases import target_coord, city_map
+from succ_func import successor_func, State
 
-def manhat_heu(state: tuple, target: tuple):
-    state_x, state_y = state
-    target_x, target_y = target
-    return abs(state_x - target_x) + abs(state_y - target_y)
+start_states = []
+for target in target_coord:
+    start_states.extend(successor_func(State(target)))
+start_state = start_states[0]
+for st_state in start_states:
+    if st_state.getTotalVal() < start_state.getTotalVal():
+        start_state = st_state
+        
+def astar(state: State):
+    successor_states = successor_func(state)
+    
