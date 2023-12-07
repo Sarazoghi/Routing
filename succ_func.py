@@ -1,4 +1,3 @@
-from astar_alg import manhat_heu
 from testcases import START_ENERGY, city_map, target_coord
 
 class State:
@@ -8,7 +7,7 @@ class State:
         self.target = target
         self.cost_val = START_ENERGY - energy
         if not current:
-            self.heu_val = float('-inf')
+            self.heu_val = float('inf')
         else:
             self.heu_val = manhat_heu(current, target)
         self.total_val = self.cost_val + self.heu_val
@@ -38,6 +37,11 @@ class State:
                 self.getHeuVal(),
                 self.getTotalVal())
 
+def manhat_heu(state: tuple, target: tuple):
+    state_x, state_y = state
+    target_x, target_y = target
+    return abs(state_x - target_x) + abs(state_y - target_y)
+
 moves = {
     'U': (0, -1),
     'D': (0, 1),
@@ -65,7 +69,3 @@ def successor_func(state: State):
                                       (0, 0),
                                       state.getEnergy() + city_map[0][0]))
         return successor_states
-
-start_state = State(target_coord[0])
-for state in successor_func(start_state):
-    print(state.getInfo())
