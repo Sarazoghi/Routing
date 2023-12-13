@@ -1,4 +1,4 @@
-from testcases import START_ENERGY, city_map, target_coord, rows, cols
+from testcases import START_ENERGY, city_map, target_coord
 
 class State:
     def __init__(self, target: tuple, current: tuple = None, energy: int = START_ENERGY, steps: list = None):
@@ -62,7 +62,7 @@ def successor_func(state: State):
             move_x, move_y = moves[move]
             next_x = state_x + move_x
             next_y = state_y + move_y
-            if (0 <= next_x < rows) and (0 <= next_y < cols):
+            if (0 <= next_x < len(city_map)) and (0 <= next_y < len(city_map[0])):
                 successor_states.append(State(state.getTarget(),
                                               (next_x, next_y),
                                               state.getEnergy() + city_map[next_x][next_y],
