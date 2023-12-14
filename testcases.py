@@ -1,3 +1,5 @@
+import copy
+
 # rows, cols = [int(item) for item in input().split()]
 # city_map = []
 # for row in range(rows):
@@ -11,7 +13,7 @@ initial_map = [
     ['X', 'X', '1', 'X', 'X', '50', '2', '1C', '1', 'X'],
     ['1', '1', '1', '2', '2', '2T', '2', '1', '1', '1'],
 ]
-city_map = initial_map.copy()
+city_map = copy.deepcopy(initial_map)
 target_coord = []
 START_ENERGY = 500
 bonus_values = {
@@ -22,14 +24,14 @@ bonus_values = {
 
 for row in range(rows):
     for index in range(cols):
-        if city_map[row][index].isdigit():
-            city_map[row][index] = -int(city_map[row][index])
-        elif city_map[row][index][-1:] == 'R':
-            city_map[row][index] = -int(city_map[row][index][:-1])
-        elif city_map[row][index][-1:] == 'T':
+        if initial_map[row][index].isdigit():
+            city_map[row][index] = -int(initial_map[row][index])
+        elif initial_map[row][index][-1:] == 'R':
+            city_map[row][index] = -int(initial_map[row][index][:-1])
+        elif initial_map[row][index][-1:] == 'T':
             target_coord.append((row, index))
-            city_map[row][index] = -int(city_map[row][index][:-1])
-        elif city_map[row][index] == 'X':
+            city_map[row][index] = -int(initial_map[row][index][:-1])
+        elif initial_map[row][index] == 'X':
             city_map[row][index] = float('-inf')
-        elif city_map[row][index][-1:] == 'C' or city_map[row][index][-1:] == 'B' or city_map[row][index][-1:] == 'I':
-            city_map[row][index] = -int(city_map[row][index][:-1]) + bonus_values[city_map[row][index][-1:]]
+        elif initial_map[row][index][-1:] == 'C' or initial_map[row][index][-1:] == 'B' or initial_map[row][index][-1:] == 'I':
+            city_map[row][index] = -int(initial_map[row][index][:-1]) + bonus_values[initial_map[row][index][-1:]]
