@@ -21,6 +21,12 @@ bonus_values = {
     'B': 5,
     'I': 12
 }
+moves = {
+    'U': (-1, 0),
+    'D': (1, 0),
+    'L': (0, -1),
+    'R': (0, 1)
+}
 
 for row in range(rows):
     for index in range(cols):
@@ -35,3 +41,13 @@ for row in range(rows):
             city_map[row][index] = float('-inf')
         elif initial_map[row][index][-1:] == 'C' or initial_map[row][index][-1:] == 'B' or initial_map[row][index][-1:] == 'I':
             city_map[row][index] = -int(initial_map[row][index][:-1]) + bonus_values[initial_map[row][index][-1:]]
+            
+def convert_to_str(steps: list):
+    def diff_tuple(first, second):
+        return tuple(x - y for x, y in zip(first, second))
+    def swap_keyvalue(dictionary: dict):
+        return {value: key if not isinstance(key, dict) else swap_keyvalue(key) for key, value in dictionary.items()}
+    result_str = ''
+    for step1, step2 in zip(steps[1:], steps[:-1]):
+        result_str += swap_keyvalue(moves)[diff_tuple(step1, step2)]
+    return result_str
