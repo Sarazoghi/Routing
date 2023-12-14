@@ -1,4 +1,4 @@
-from testcases import START_ENERGY, city_map, target_coord, initial_map, bonus_values
+from testcases import START_ENERGY, city_map, moves, initial_map, bonus_values
 
 class State:
     def __init__(self, target: tuple, current: tuple = None, energy: int = START_ENERGY, steps: list = None):
@@ -52,13 +52,6 @@ def manhat_heu(current: tuple, target: tuple):
     state_x, state_y = current
     target_x, target_y = target
     return abs(state_x - target_x) + abs(state_y - target_y)
-
-moves = {
-    'U': (-1, 0),
-    'D': (1, 0),
-    'L': (0, -1),
-    'R': (0, 1)
-}
 
 def successor_func(state: State):
     successor_states = []
