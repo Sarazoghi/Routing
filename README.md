@@ -33,7 +33,25 @@ Move right by one unit: R
 Ali cannot go out of the given range.
 Ali can see all the streets and the energy that the use of that street takes from him.
 
+# INPUT : 
+Input instance :
+6 10
+1R 1 1 5 5 4 2C 1 15 1B
+1 1 5 3 5 5 4 5 X X
+5 1I 1 6 2 2 2 1 1 1T
+X X 1 6 5 5 2 1 1 X
+X X 1 X X 50 2 1C 1 X
+1 1 1 2 2 2T 2 1 1 1
 
+* The first and last cells affect the causal energy.
+R -> Restaurant
+C -> Coffee | Energy = 10
+B -> Biscuit | Energy = 5
+I -> Ice Cream | Energy = 12
+T -> Goals
+
+* The number written in each house is the cost of using that street (cell). By that number, the causal energy is reduced.
+* As it is clear, consuming food on the way is not mandatory, but visiting all Targets is mandatory.
 # PHASE ONE 
 Implementation of the successor function
 
