@@ -1,43 +1,53 @@
 from testcases import START_ENERGY, city_map, target_coord ,rows , cols
 from succ_func import State, successor_func,moves
-from queue import Queue
+import heapq
 import time
 
 
-# start_state = State(target_coord[0])
-# print(start_state.getInfo())
-# first_move = successor_func(start_state)
-# second_move = []
-# for state in first_move:
-#     second_move.extend(successor_func(state))
-#     print("First",state.getInfo())
-# third_move = []
-# for state in second_move:
-#     third_move.extend(successor_func(state))
-#     print("Second",state.getInfo())
-# for state in third_move:
-#     print(state.getInfo())
-def bfs(start_state,start_energy) : 
-    print(start_state.getInfo())
+def bfs_all_targets(start_state, targets):
+    visited = set()
+    priority_queue = [start_state]
+    max_energy_path = []
+    energy = 0;
+    
+    start_time = time.time();
+    
+    while priority_queue and set(targets) - visited:
+        current_state = heapq.heappop(priority_queue)
 
-    moves = [start_state]
+        if current_state.getCurrent() in visited:
+            continue
 
-    for i in range(cols):
-        new_moves = []
-        for state in moves:
-            new_moves.extend(successor_func(state))
-        moves = new_moves
+        visited.add(current_state.getCurrent())
 
-    for state in moves:
-        print(state.getInfo())
-    return
+        if current_state.getCurrent() in targets:
+            targets.remove(current_state.getCurrent())  # Mark the target as visited
 
-
-start_state = State(target_coord[0])
-start_energy = START_ENERGY;
-
-bfs(start_state,start_energy);
-
-
+            # Check if all targets are visited after marking the current target
+            if not (set(targets) - visited):
+                
+                if not max_energy_path or current_state.getEnergy() > max_energy_path[-1].getEnergy():
+                    max_energy_path = current_state.getSteps() + [current_state.getCurrent()]
+                    energy = current_state.getEnergy()
+        successor_states = successor_func(current_state)
+        for successor_state in successor_states:
+            heapq.heappush(priority_queue, successor_state)
+            
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    
+    return max_energy_path , energy , elapsed_time # Return the path with maximum energy and all targets
 
 
+# Example usage:
+start_state = State(target=(rows - 1, cols - 1))
+max_energy_path , total_energy , elapsed_time = bfs_all_targets(start_state, target_coord)
+
+if max_energy_path:
+    print("Final Energy : " ,total_energy)  
+    for step in max_energy_path :
+        print("Step :", step) 
+        
+    print("Elapsed Time:", elapsed_time, "seconds")
+else:
+    print("No solution found.")
