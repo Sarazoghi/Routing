@@ -1,5 +1,5 @@
-from testcases import START_ENERGY, city_map, target_coord ,rows , cols
-from succ_func import State, successor_func,moves
+from testcases import target_coord ,rows , cols
+from succ_func import State, successor_func
 import heapq
 import time
 
