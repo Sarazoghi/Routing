@@ -51,3 +51,8 @@ def convert_to_str(steps: list):
     for step1, step2 in zip(steps[1:], steps[:-1]):
         result_str += swap_keyvalue(moves)[diff_tuple(step1, step2)]
     return result_str
+
+for row in range(rows):
+    for col in range(cols):
+        print(city_map[row][col], end=' ')
+    print() 
