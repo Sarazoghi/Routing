@@ -1,13 +1,25 @@
 from testcases import *
 from succ_func import *
 import timeit
+import math
 
+def bestHeuVal(first: State, second: State):
+    if first.getHeuVal() != second.getHeuVal():
+        if first.getHeuVal() < second.getHeuVal():
+            return first
+        else:
+            return second
+    else:
+        return first
+    
 def greedy(start_state: State):
     if start_state.getCurrent() == start_state.getTarget():
         return start_state
     else:
         successor_states = successor_func(start_state)
-        best_next_state = min(successor_states)
+        best_next_state = None
+        for first, second in zip(successor_states, successor_states[1:]):
+            best_next_state = bestHeuVal(first, second)
         print(start_state.getInfo(), best_next_state.getInfo())
         if best_next_state.getHeuVal() > start_state.getHeuVal():
             return None
