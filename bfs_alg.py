@@ -1,8 +1,8 @@
-from testcases import target_coord ,rows , cols
+from testcases import city_map, target_coord ,rows , cols
 from succ_func import State, successor_func
 import heapq
-import time
-
+import timeit
+import math
 
 def bfs_all_targets(start_state, targets):
     visited = set()
@@ -10,7 +10,7 @@ def bfs_all_targets(start_state, targets):
     max_energy_path = []
     energy = 0;
     
-    start_time = time.time();
+    start_time = timeit.default_timer()
     
     while priority_queue and set(targets) - visited:
         current_state = heapq.heappop(priority_queue)
@@ -31,9 +31,13 @@ def bfs_all_targets(start_state, targets):
                     energy = current_state.getEnergy()
         successor_states = successor_func(current_state)
         for successor_state in successor_states:
-            heapq.heappush(priority_queue, successor_state)
+            next_x, next_y = successor_state.getCurrent()
+
+            # Check if the cell has a valid value (not -inf)
+            if not math.isinf(city_map[next_x][next_y]):
+                heapq.heappush(priority_queue, successor_state)
             
-    end_time = time.time()
+    end_time = timeit.default_timer()
     elapsed_time = end_time - start_time
     
     return max_energy_path , energy , elapsed_time # Return the path with maximum energy and all targets
