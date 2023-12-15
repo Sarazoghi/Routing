@@ -61,6 +61,9 @@ class State:
         self.target = target
         self.heu_val = manhat_heu(self.current, self.target)
         self.total_val = self.cost_val + self.heu_val
+        
+    def setSteps(self, new_steps: list):
+        self.steps = new_steps
 
 def manhat_heu(current: tuple, target: tuple):
     state_x, state_y = current
