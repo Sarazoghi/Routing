@@ -1,4 +1,4 @@
-from testcases import city_map, target_coord ,rows , cols
+from testcases import city_map, target_coord ,rows , cols, convert_to_str
 from succ_func import State, successor_func
 import heapq
 import timeit
@@ -46,12 +46,8 @@ def bfs_all_targets(start_state, targets):
 # Example usage:
 start_state = State(target=(rows - 1, cols - 1))
 max_energy_path , total_energy , elapsed_time = bfs_all_targets(start_state, target_coord)
-
+optimal_path = convert_to_str(max_energy_path)
 if max_energy_path:
-    print("Final Energy : " ,total_energy)  
-    for step in max_energy_path :
-        print("Step :", step) 
-        
-    print("Elapsed Time:", elapsed_time, "seconds")
+    print(total_energy,optimal_path,elapsed_time, "seconds")  
 else:
     print("No solution found.")
