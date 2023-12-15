@@ -31,22 +31,24 @@ def astar(start_state: State, target: tuple):
 
 start_time = timeit.default_timer()
 
+targets = target_coord.copy()
+
 start_states = []
 for target in target_coord:
     start_states.extend(successor_func(State(target)))
-
-not_visited = target_coord.copy()
 final_state = min(start_states)
-while not_visited:
-    best_next_target = min(not_visited, key=lambda target: manhat_heu(final_state.getCurrent(), target))
+
+while targets:
+    best_next_target = min(targets, key=lambda target: manhat_heu(final_state.getCurrent(), target))
     final_state.setTarget(best_next_target)
     final_state = astar(final_state, best_next_target)
-    not_visited.remove(best_next_target)
+    targets.remove(best_next_target)
 
 end_time = timeit.default_timer()
 
 if final_state.getEnergy() != float('-inf'):
     total_time = f'{end_time - start_time} seconds'
-    print(f"Steps: {convert_to_str(final_state.getSteps())} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
+    curr_x, curr_y = final_state.getCurrent()
+    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy() + city_map[curr_x][curr_y]} \nTime: {total_time}")
 else:
     print('No route found!')
