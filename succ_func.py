@@ -1,4 +1,4 @@
-from testcases import START_ENERGY, city_map, moves, initial_map, bonus_values
+from testcases import *
 
 class State:
     def __init__(self, target: tuple, current: tuple = None, energy: int = START_ENERGY, steps: list = None):
@@ -18,6 +18,13 @@ class State:
             return self.total_val < other.total_val
         else:
             return self.energy > other.energy
+        
+    def __eq__(self, other):
+        if isinstance(other, State):
+            return (self.current == other.current and
+                    self.target == other.target and
+                    self.current in self.steps)
+        return False
     
     def getCurrent(self):
         return self.current
