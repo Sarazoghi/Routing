@@ -2,7 +2,7 @@ from testcases import *
 from succ_func import *
 import timeit
 
-def astar(start_state: State, target: tuple):
+def astar(start_state: State, targets: list = target_coord.copy()):
     open_set = [start_state]
     closed_set = []
 
@@ -10,8 +10,11 @@ def astar(start_state: State, target: tuple):
         current_state = min(open_set)
         open_set.remove(current_state)
 
-        if current_state.getCurrent() == target:
-            return current_state
+        if current_state.getCurrent() in targets:
+            targets.remove(current_state.getCurrent())
+            if not targets:
+                return current_state
+            current_state.setHeuVal(targets)
 
         successor_states = successor_func(current_state)
         for successor_state in successor_states:
@@ -33,16 +36,8 @@ start_time = timeit.default_timer()
 
 targets = target_coord.copy()
 
-start_states = []
-for target in target_coord:
-    start_states.extend(successor_func(State(target)))
-final_state = min(start_states)
-
-while targets:
-    best_next_target = min(targets, key=lambda target: manhat_heu(final_state.getCurrent(), target))
-    final_state.setTarget(best_next_target)
-    final_state = astar(final_state, best_next_target)
-    targets.remove(best_next_target)
+start_state = min(successor_func(State()))
+final_state = astar(start_state)
 
 end_time = timeit.default_timer()
 
