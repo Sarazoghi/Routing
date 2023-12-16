@@ -34,8 +34,6 @@ def astar(start_state: State, targets: list = target_coord.copy()):
 
 start_time = timeit.default_timer()
 
-targets = target_coord.copy()
-
 start_state = min(successor_func(State()))
 final_state = astar(start_state)
 
