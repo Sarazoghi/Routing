@@ -36,8 +36,4 @@ final_state = greedy(start_state)
 
 end_time = timeit.default_timer()
 
-if final_state and final_state.getEnergy() != float('-inf'):
-    total_time = f'{end_time - start_time} seconds'
-    print(f"Steps: {convert_to_str(final_state.getSteps())} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
-else:
-    print('No route found!')
+steps = convert_to_str(final_state.getSteps() + [final_state.getCurrent()])
