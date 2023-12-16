@@ -23,7 +23,7 @@ class State:
         if isinstance(other, State):
             return (self.current == other.current and
                     self.targets == other.targets and
-                    self.current in self.steps)
+                    self.current in other.steps)
         return False
     
     def getCurrent(self):
