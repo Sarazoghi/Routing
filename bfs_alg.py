@@ -3,24 +3,24 @@ from testcases import *
 from succ_func import *
 import timeit
 
-def bfs(start_state: State, targets: list = target_coord.copy()):
-    visited = set()
+targets = target_coord.copy()
+
+def bfs(start_state: State):
+    visited = []
     queue = Queue()
     queue.put(start_state)
 
     while not queue.empty():
         current_state = queue.get()
-        state_tuple = (current_state.getCurrent(), current_state.getEnergy(), tuple(current_state.getHeuVal()))
 
-        if state_tuple not in visited:
-            visited.add(state_tuple)
+        if current_state not in visited:
+            visited.append(current_state)
                 
             if current_state.getCurrent() in targets:
                 if current_state.getEnergy() != float('-inf'):
                     targets.remove(current_state.getCurrent())
-                    if not targets:
-                        return current_state
                     current_state.setHeuVal(targets)
+                    return current_state
 
             successor_states = successor_func(current_state)
             for state in successor_states:
@@ -30,12 +30,11 @@ def bfs(start_state: State, targets: list = target_coord.copy()):
 
 start_time = timeit.default_timer()
 
-targets = target_coord.copy()
+final_state = min(successor_func(State()))
 
-start_state = min(successor_func(State()))
-
-final_state = bfs(start_state)
-
+while targets:
+    final_state = bfs(final_state)
+    
 end_time = timeit.default_timer()
 
 steps = convert_to_str(final_state.getSteps() + [final_state.getCurrent()])
