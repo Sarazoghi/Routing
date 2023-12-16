@@ -5,14 +5,16 @@ import copy
 # for row in range(rows):
 #     city_map.append(input().split())
 rows, cols = 6, 10
+
 initial_map = [
-    ['1R', 'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
-    ['1',  'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
-    ['5',  '1I', '1', 'X', 'X', 'X',  'X', 'X',  '1', '1T'],
-    ['X',  'X',  '1', '6', '5', '5',  'X', 'X',  '1', 'X'],
-    ['X',  'X',  'X', 'X', 'X', '50', '2', '1C', '1', 'X'],
-    ['X',  'X',  'X', 'X', 'X', '2T', 'X', 'X',  'X', 'X'],
+    ['1R', '1', '1', '5', '5', '4', '2C', '1', '15', '1B'],
+    ['1', '1', '5', '3', '5', '5', '4', '5', 'X', 'X'],
+    ['5', '1I', '1', '6', '2', '2', '2', '1', '1', '1T'],
+    ['X', 'X', '1', '6', '5', '5', '2', '1', '1', 'X'],
+    ['X', 'X', '1', 'X', 'X', '50', '2', '1C', '1', 'X'],
+    ['1', '1', '1', '2', '2', '2T', '2', '1', '1', '1'],
 ]
+
 # initial_map = [
 #     ['1R', 'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
 #     ['1',  'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
@@ -59,8 +61,3 @@ def convert_to_str(steps: list):
     for step1, step2 in zip(steps[1:], steps[:-1]):
         result_str += swap_keyvalue(moves)[diff_tuple(step1, step2)]
     return result_str
-
-for row in range(rows):
-    for col in range(cols):
-        print(city_map[row][col], end=' ')
-    print() 
