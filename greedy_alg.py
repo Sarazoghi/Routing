@@ -4,23 +4,19 @@ import timeit
 import math
 
 def bestHeuVal(first: State, second: State):
-    if first.getHeuVal() != second.getHeuVal():
-        if first.getHeuVal() < second.getHeuVal():
-            return first
-        else:
-            return second
-    else:
+    if first.getHeuVal() <= second.getHeuVal():
         return first
+    else:
+        return second
     
 def greedy(start_state: State):
     if start_state.getCurrent() == start_state.getTarget():
         return start_state
     else:
         successor_states = successor_func(start_state)
-        best_next_state = None
-        for first, second in zip(successor_states, successor_states[1:]):
-            best_next_state = bestHeuVal(first, second)
-        print(start_state.getInfo(), best_next_state.getInfo())
+        best_next_state = successor_states[0]
+        for state in successor_states[1:]:
+            best_next_state = bestHeuVal(best_next_state, state)
         if best_next_state.getHeuVal() > start_state.getHeuVal():
             return None
         return greedy(best_next_state)
@@ -41,7 +37,7 @@ while targets and final_state:
 
 end_time = timeit.default_timer()
 
-if final_state:
+if final_state.getEnergy() != float('-inf'):
     total_time = f'{end_time - start_time} seconds'
     print(f"Steps: {convert_to_str(final_state.getSteps())} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
 else:
