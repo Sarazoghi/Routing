@@ -36,10 +36,10 @@ start_state = min(successor_func(State()))
 final_state = dfs(start_state)
 
 end_time = timeit.default_timer()
-print(final_state.getInfo())
+
 
 if final_state.getEnergy() != float('-inf'):
     total_time = f'{end_time - start_time} seconds'
-    print(f"Steps: {(final_state.getSteps())} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
+    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
 else:
     print('No route found!')
