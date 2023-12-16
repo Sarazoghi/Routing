@@ -1,53 +1,55 @@
-from testcases import city_map, target_coord, rows, cols, convert_to_str
-from succ_func import State, successor_func
+from queue import LifoQueue  # LifoQueue for stack behavior
+from testcases import *
+from succ_func import *
 import timeit
-import math
 
-def dfs_best_path(start_state, targets):
+def dfs(start_state: State, targets):
     visited = set()
-    best_energy_path = []
-    total_energy = 0
-    elapsed_time = 0
+    stack = LifoQueue()
+    stack.put(start_state)
 
-    for target in targets:
-        stack = [start_state]
-        max_energy_path = []
+    while not stack.empty() and targets:
+        current_state = stack.get()
 
-        start_time = timeit.default_timer()
+        if current_state.getCurrent() in visited:
+            continue
 
-        while stack and target not in visited:
-            current_state = stack.pop()
+        visited.add(current_state.getCurrent())
 
-            if current_state.getCurrent() in visited:
-                continue
+        print("Visited:", current_state.getCurrent())  # Print the visited cell
 
-            visited.add(current_state.getCurrent())
+        if current_state.getCurrent() in targets:
+            targets.remove(current_state.getCurrent())  # Mark the target as visited
 
-            print("Visited:", current_state.getCurrent())  # Print the visited cell
+            # Check if all targets are visited after marking the current target
+            if not targets:
+                return current_state
 
-            if current_state.getCurrent() == target:
-                targets.remove(target)  # Mark the target as visited
+        successor_states = successor_func(current_state)
 
-                if not max_energy_path or current_state.getEnergy() > max_energy_path[-1].getEnergy():
-                    max_energy_path = current_state.getSteps() + [current_state.getCurrent()]
+        # Push successor states with updated energy in reverse order for DFS
+        for state in reversed(successor_states):
+            if state.getCurrent() not in visited and state.getEnergy() >= 0:
+                state_energy = state.getEnergy() + city_map[state.getCurrent()[0]][state.getCurrent()[1]]
+                updated_steps = current_state.getSteps() + [state.getCurrent()]  # Include the new step
+                updated_state = State(state.getTargets(), state.getCurrent(), state_energy, updated_steps)
+                stack.put(updated_state)
 
-        end_time = timeit.default_timer()
-        elapsed_time += end_time - start_time
-        total_energy += max_energy_path[-1].getEnergy() if max_energy_path else 0
+    return None
 
-        best_energy_path += max_energy_path[:-1]  # Exclude the last cell, which is the target itself
+start_time = timeit.default_timer()
 
-        # Set the last visited target as the new starting point
-        start_state = State(target=target)
+targets = target_coord.copy()
 
-    return best_energy_path, total_energy, elapsed_time
+# Assuming the initial state is at the starting point (0, 0)
+start_state = State(targets, None, 500, [])
 
+final_state = dfs(start_state, targets)
 
-# Example usage:
-start_state = State(target=(0, 0))  # Start from the first house
-max_energy_path, total_energy, elapsed_time = dfs_best_path(start_state, target_coord)
-optimal_path = convert_to_str(max_energy_path)
-if max_energy_path:
-    print(total_energy, optimal_path, elapsed_time, "seconds")
+end_time = timeit.default_timer()
+
+if final_state and final_state.getEnergy() != float('-inf'):
+    total_time = f'{end_time - start_time} seconds'
+    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
 else:
-    print("No solution found.")
+    print('No route found!')
