@@ -12,17 +12,17 @@ initial_map = [
     ['5', '1I', '1', '6', '2', '2', '2', '1', '1', '1T'],
     ['X', 'X', '1', '6', '5', '5', '2', '1', '1', 'X'],
     ['X', 'X', '1', 'X', 'X', '50', '2', '1C', '1', 'X'],
-    ['1', '1', '1', '2', '2', '2T', '2', '1', '1', '1'],
+    ['1', '1', '1', '2', 'X', '2T', '2', '1', '1', '1'],
 ]
 
-# initial_map = [
-#     ['1R', 'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
-#     ['1',  'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
-#     ['5',  '1I', '1', 'X', 'X', 'X',  'X', 'X',  '1', '1T'],
-#     ['X',  'X',  '1', '6', '5', '5',  'X', 'X',  '1', 'X'],
-#     ['X',  'X',  'X', 'X', 'X', '50', '2', '1C', '1', 'X'],
-#     ['X',  'X',  'X', 'X', 'X', '2T', 'X', 'X',  'X', 'X'],
-# ]
+initial_map = [
+    ['1R', 'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
+    ['1',  'X',  'X', 'X', 'X', 'X',  'X', 'X',  'X', 'X'],
+    ['5',  '1I', '1', 'X', 'X', 'X',  'X', 'X',  '1', '1T'],
+    ['X',  'X',  '1', '6', '5', '5',  'X', 'X',  '1', 'X'],
+    ['X',  'X',  'X', 'X', 'X', '50', '2', '1C', '1', 'X'],
+    ['X',  'X',  'X', 'X', 'X', '2T', 'X', 'X',  'X', 'X'],
+]
 city_map = copy.deepcopy(initial_map)
 target_coord = []
 START_ENERGY = 500
@@ -61,3 +61,13 @@ def convert_to_str(steps: list):
     for step1, step2 in zip(steps[1:], steps[:-1]):
         result_str += swap_keyvalue(moves)[diff_tuple(step1, step2)]
     return result_str
+
+temp_flat_map = []
+for row in city_map:
+    temp_flat_map.extend(row)
+flat_map = []
+for item in temp_flat_map:
+    if item != float('-inf'):
+        flat_map.append(item)
+biggest_cost = min(flat_map)
+most_cost = biggest_cost * rows * cols
