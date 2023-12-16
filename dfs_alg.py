@@ -1,4 +1,4 @@
-from queue import LifoQueue  # LifoQueue for stack behavior
+from queue import LifoQueue
 from testcases import *
 from succ_func import *
 import timeit
@@ -11,12 +11,14 @@ def dfs(start_state: State, targets):
     while not stack.empty() and targets:
         current_state = stack.get()
 
-        if current_state.getCurrent() in visited:
+        # Check if the current state is already in the path
+        if current_state.getCurrent() in current_state.getSteps():
             continue
 
         visited.add(current_state.getCurrent())
 
         print("Visited:", current_state.getCurrent())  # Print the visited cell
+        print("Energy:", current_state.getEnergy())  # Print the current energy level
 
         if current_state.getCurrent() in targets:
             targets.remove(current_state.getCurrent())  # Mark the target as visited
@@ -29,10 +31,14 @@ def dfs(start_state: State, targets):
 
         # Push successor states with updated energy in reverse order for DFS
         for state in reversed(successor_states):
-            if state.getCurrent() not in visited and state.getEnergy() >= 0:
+            print(state.getInfo())
+            
+            # Update the steps by adding the current state's position to it
+            updated_steps = current_state.getSteps() + [current_state.getCurrent()]
+
+            if state.getEnergy() >= 0 and set(state.getTargets()) == set(targets):
                 state_energy = state.getEnergy() + city_map[state.getCurrent()[0]][state.getCurrent()[1]]
-                updated_steps = current_state.getSteps() + [state.getCurrent()]  # Include the new step
-                updated_state = State(state.getTargets(), state.getCurrent(), state_energy, updated_steps)
+                updated_state = State(targets, state.getCurrent(), state_energy, updated_steps)
                 stack.put(updated_state)
 
     return None
@@ -41,8 +47,7 @@ start_time = timeit.default_timer()
 
 targets = target_coord.copy()
 
-# Assuming the initial state is at the starting point (0, 0)
-start_state = State(targets, None, 500, [])
+start_state = State(targets, None, START_ENERGY, [])
 
 final_state = dfs(start_state, targets)
 
@@ -50,6 +55,6 @@ end_time = timeit.default_timer()
 
 if final_state and final_state.getEnergy() != float('-inf'):
     total_time = f'{end_time - start_time} seconds'
-    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
+    print(f"Steps: {(final_state.getSteps())} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
 else:
     print('No route found!')
