@@ -1,24 +1,20 @@
-from testcases import city_map, target_coord, rows, cols, convert_to_str
-from succ_func import State, successor_func
-import heapq
+from queue import Queue
+from testcases import *
+from succ_func import *
 import timeit
-import math
 
-def bfs_all_targets(start_state, targets):
-    visited_cells = set()
-    queue = [start_state]
-    max_energy_path = []
-    energy = 0;
+def bfs(start_state: State, targets):
+    visited = set()
+    queue = Queue()
+    queue.put(start_state)
 
-    start_time = timeit.default_timer()
+    while not queue.empty() and targets:
+        current_state = queue.get()
 
-    while queue and set(targets) - visited_cells:
-        current_state = queue.pop(0)
-
-        if current_state.getCurrent() in visited_cells:
+        if current_state.getCurrent() in visited:
             continue
 
-        visited_cells.add(current_state.getCurrent())
+        visited.add(current_state.getCurrent())
 
         print("Visited:", current_state.getCurrent())  # Print the visited cell
 
@@ -26,37 +22,34 @@ def bfs_all_targets(start_state, targets):
             targets.remove(current_state.getCurrent())  # Mark the target as visited
 
             # Check if all targets are visited after marking the current target
-            if not (set(targets) - visited_cells):
-
-                if not max_energy_path or current_state.getEnergy() > max_energy_path[-1].getEnergy():
-                    max_energy_path = current_state.getSteps() + [current_state.getCurrent()]
-                    energy = current_state.getEnergy()
+            if not targets:
+                return current_state
 
         successor_states = successor_func(current_state)
 
-        # Sort the successor states to prioritize left-to-right, top-to-bottom order
-        successor_states.sort(key=lambda state: (state.getCurrent()[0], state.getCurrent()[1]))
+        # Enqueue successor states with updated energy
+        for state in successor_states:
+            if state.getCurrent() not in visited and state.getEnergy() >= 0:
+                state_energy = state.getEnergy() + city_map[state.getCurrent()[0]][state.getCurrent()[1]]
+                updated_steps = current_state.getSteps() + [state.getCurrent()]  # Include the new step
+                updated_state = State(state.getTargets(), state.getCurrent(), state_energy, updated_steps)
+                queue.put(updated_state)
 
-        for successor_state in successor_states:
-            next_x, next_y = successor_state.getCurrent()
+    return None
 
-            # Check if the cell has a valid value (not -inf)
-            if not math.isinf(city_map[next_x][next_y]):
-                queue.append(successor_state)
+start_time = timeit.default_timer()
 
-    end_time = timeit.default_timer()
-    elapsed_time = end_time - start_time
+targets = target_coord.copy()
 
-    return max_energy_path, energy, elapsed_time  # Return the path with maximum energy and all targets
+# Assuming the initial state is at the starting point (0, 0)
+start_state = State(targets, None, 500, [])
 
+final_state = bfs(start_state, targets)
 
-# Example usage:
-start_state = State(target=(rows - 1, cols - 1))
-max_energy_path, total_energy, elapsed_time = bfs_all_targets(start_state, set(target_coord))
-optimal_path = convert_to_str(max_energy_path)
-if max_energy_path:
-    print(total_energy, optimal_path, elapsed_time, "seconds")
-    for state in max_energy_path:
-        print(state)
+end_time = timeit.default_timer()
+
+if final_state and final_state.getEnergy() != float('-inf'):
+    total_time = f'{end_time - start_time} seconds'
+    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
 else:
-    print("No solution found.")
+    print('No route found!')
