@@ -5,16 +5,13 @@ import timeit
 
 start_time = timeit.default_timer()
 
-targets = target_coord.copy()
-
-def ucs(start_state: State):
+def ucs(start_state: State, targets: list = target_coord.copy()):
     visited = []
     priority_queue = PriorityQueue()
     priority_queue.put((start_state.getCostVal(), start_state))
 
     while not priority_queue.empty():
         current_state = priority_queue.get()[1]
-        
         
         if current_state not in visited:
             visited.append(current_state)
@@ -33,7 +30,7 @@ targets = target_coord.copy()
 final_state = min(successor_func(State()))
 
 while targets:
-    final_state = ucs(final_state)
+    final_state = ucs(final_state, targets)
     targets.remove(final_state.getCurrent())
 
 end_time = timeit.default_timer()
