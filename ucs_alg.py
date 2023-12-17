@@ -35,4 +35,9 @@ while targets:
 
 end_time = timeit.default_timer()
 
-steps = convert_to_str(final_state.getSteps() + [final_state.getCurrent()])
+if final_state.getEnergy() != float('-inf'):
+    total_time = f'{end_time - start_time} seconds'
+    curr_x, curr_y = final_state.getCurrent()
+    print(f"Steps: {convert_to_str(final_state.getSteps() + [final_state.getCurrent()])} \nEnergy: {final_state.getEnergy()} \nTime: {total_time}")
+else:
+    print('No route found!')
